@@ -1,3 +1,6 @@
+install:
+	poetry install
+
 gendiff:
 	poetry run gendiff tests/file1.json tests/file2.json
 
@@ -12,6 +15,3 @@ package-install:
 
 lint:
 	poetry run flake8 gendiff
-
-install:
-	poetry install
