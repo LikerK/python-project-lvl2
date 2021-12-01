@@ -22,6 +22,9 @@ def get_diff(data1, data2):
         elif v1 == v2:
             status = "no change"
             value = v1
+        elif type(v1) == dict and type(v2) == dict:
+            status = 'children'
+            value = get_diff(v1, v2)
         else:
             status = "changed"
             value = v1, v2

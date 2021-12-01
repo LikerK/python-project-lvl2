@@ -1,27 +1,68 @@
 #!/usr/bin/env python3
 
+SPACE = '  '
+ADDED = '+ '
+REMOVED = '- '
 
-def conversion_to_string(dictonary):
-    keys = dictonary.keys()
-    result = '{\n'
+
+def edit_diff(diff):
+    result = {}
+    keys = diff.keys()
     for key in keys:
+        value = diff.get(key)
         if key[0] == 'removed':
-            result += '   - {}: {}\n'.format(key[1], dictonary[key])
+            result[REMOVED+key[1]] = convert_value(value)
         elif key[0] == 'added':
-            result += '   + {}: {}\n'.format(key[1], dictonary[key])
+            result[ADDED+key[1]] = convert_value(value)
         elif key[0] == 'no change':
-            result += '     {}: {}\n'.format(key[1], dictonary[key])
+            result[SPACE+key[1]] = convert_value(value)
         elif key[0] == 'changed':
-            value = dictonary.get(key)
-            result += '   - {}: {}\n'.format(key[1], value[0])
-            result += '   + {}: {}\n'.format(key[1], value[1])
-    result += '}'
-    return change_under_json(result)
+            result[REMOVED+key[1]] = convert_value(value[0])
+            result[ADDED+key[1]] = convert_value(value[1])
+        elif key[0] == 'children':
+            result[SPACE+key[1]] = edit_diff(value)
+    return result
 
 
-def change_under_json(string):
+def convert_value(value):
+    if type(value) != dict:
+        return value
+    result = {}
+    keys = value.keys()
+    for key in keys:
+        v1 = value.get(key)
+        result[SPACE+key] = convert_value(v1)
+    return result
+
+
+def string_formation(data, indent=1):
+    result = ''
+    keys = data.keys()
+    for key in keys:
+        value = data[key]
+        if type(value) == dict:
+            result += f'{SPACE*indent}{key}: ' + '{\n'
+            result += string_formation(value, indent+2)
+            result += f'{SPACE*(indent+1)}' + '}\n'
+        else:
+            result += f'{SPACE*indent}{key}: {value}\n'
+    return result
+
+
+def change_under_format(string):
     if 'False' in string:
         string = string.replace('False', 'false')
     if 'True' in string:
         string = string.replace('True', 'true')
+    if 'None' in string:
+        string = string.replace('None', 'null')
     return string
+
+
+def get_string(diff):
+    result = '{\n'
+    edit_difference = edit_diff(diff)
+    string = string_formation(edit_difference)
+    result += change_under_format(string)
+    result += '}'
+    return result

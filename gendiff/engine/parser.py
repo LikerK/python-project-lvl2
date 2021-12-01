@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import yaml
 import argparse
 
 
@@ -17,4 +18,7 @@ def parse():
 
 
 def parses(file):
-    return json.load(open(file))
+    if file.endswith('json'):
+        return json.load(open(file))
+    elif file.endswith('yml'):
+        return yaml.safe_load(open(file))
