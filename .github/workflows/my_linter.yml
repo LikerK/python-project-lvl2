@@ -6,10 +6,11 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
-      - name: Install dependencies
+      - name: Install dependencies and pytest
         run: |
           pip install poetry
           make install
+          poetry add pytest
       - name: Run linter and test
         run: |
           make check
