@@ -1,3 +1,6 @@
+install:
+	poetry install
+
 gendiff:
 	poetry run gendiff tests/file1.json tests/file2.json
 
