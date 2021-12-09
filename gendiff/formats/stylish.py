@@ -17,14 +17,14 @@ def edit_diff(diff):
     for key in keys:
         value = diff.get(key)
         if key[0] == 'removed':
-            result[REMOVED+key[1]] = convert_value(value)
+            result[REMOVED + key[1]] = convert_value(value)
         elif key[0] == 'added':
-            result[ADDED+key[1]] = convert_value(value)
+            result[ADDED + key[1]] = convert_value(value)
         elif key[0] == 'no change':
-            result[SPACE+key[1]] = convert_value(value)
+            result[SPACE + key[1]] = convert_value(value)
         elif key[0] == 'changed':
-            result[REMOVED+key[1]] = convert_value(value[0])
-            result[ADDED+key[1]] = convert_value(value[1])
+            result[REMOVED + key[1]] = convert_value(value[0])
+            result[ADDED + key[1]] = convert_value(value[1])
         elif key[0] == 'children':
             result[SPACE+key[1]] = edit_diff(value)
     return result
@@ -47,11 +47,11 @@ def string_formation(data, indent=1):
     for key in keys:
         value = data[key]
         if type(value) == dict:
-            result += f'{SPACE*indent}{key}: ' + '{\n'
+            result += f'{SPACE * indent}{key}: ' + '{\n'
             result += string_formation(value, indent+2)
-            result += f'{SPACE*(indent+1)}' + '}\n'
+            result += f'{SPACE * (indent+1)}' + '}\n'
         else:
-            result += f'{SPACE*indent}{key}: {value}\n'
+            result += f'{SPACE * indent}{key}: {value}\n'
     return result
 
 
