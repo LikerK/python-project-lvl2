@@ -2,6 +2,8 @@
 name = "hexlet-code"
 version = "0.1.0"
 description = ""
+repository = "https://github.com/LikerK/python-project-lvl1"
+classifiers = ["I don't know what to write here..."]
 authors = ["LikerK <nagorniykirill@gmail.com>"]
 packages = [
   { include = "gendiff" },
