@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
+from gendiff.formats.change_under_format import change_under_format
 
 
 SPACE = '  '
 ADDED = '+ '
 REMOVED = '- '
+
+
+def stylish_format(data):
+    return change_under_format(get_string(data))
 
 
 def edit_diff(diff):
@@ -50,7 +55,7 @@ def string_formation(data, indent=1):
     return result
 
 
-def stylish_format(diff):
+def get_string(diff):
     result = '{\n'
     edit_difference = edit_diff(diff)
     result += string_formation(edit_difference)

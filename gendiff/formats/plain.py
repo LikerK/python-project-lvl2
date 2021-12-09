@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
+from gendiff.formats.change_under_format import change_under_format
 
 
-def plain_format(diff, path=[]):
+def plain_format(data):
+    return change_under_format(get_string(data))
+
+
+def get_string(diff, path=[]):
     result = []
     keys = diff.keys()
     for key in keys:
