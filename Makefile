@@ -24,3 +24,6 @@ check: test lint
 
 coverage:
 	poetry run coverage xml
+
+testing:
+	poetry run coverage run -m pytest -v
