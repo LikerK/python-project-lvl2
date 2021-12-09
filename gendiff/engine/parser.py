@@ -2,6 +2,7 @@
 import json
 import yaml
 import argparse
+from gendiff.formats.styles import FORMATS
 
 
 def parse():
@@ -12,7 +13,10 @@ def parse():
     parser.add_argument('second_file')
 
     # options argument
-    parser.add_argument('-f', '--format', help='set format of output')
+    parser.add_argument('-f', '--format',
+                        choices=FORMATS.keys(),
+                        default="stylish",
+                        help='output format (default: "stylish")')
     args = parser.parse_args()
     return args
 

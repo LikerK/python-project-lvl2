@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 SPACE = '  '
 ADDED = '+ '
 REMOVED = '- '
@@ -49,20 +50,9 @@ def string_formation(data, indent=1):
     return result
 
 
-def change_under_format(string):
-    if 'False' in string:
-        string = string.replace('False', 'false')
-    if 'True' in string:
-        string = string.replace('True', 'true')
-    if 'None' in string:
-        string = string.replace('None', 'null')
-    return string
-
-
-def get_string(diff):
+def stylish_format(diff):
     result = '{\n'
     edit_difference = edit_diff(diff)
-    string = string_formation(edit_difference)
-    result += change_under_format(string)
+    result += string_formation(edit_difference)
     result += '}'
     return result

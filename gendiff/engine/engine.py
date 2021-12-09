@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 from gendiff.engine.parser import parses
+from gendiff.formats.styles import FORMATS
 
 
-def generate_diff(file1, file2):
+def generate_diff(file1, file2, format_name='stylish'):
     file1 = parses(file1)
     file2 = parses(file2)
-    return get_diff(file1, file2)
+    return FORMATS[format_name](get_diff(file1, file2))
 
 
 def get_diff(data1, data2):

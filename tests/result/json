@@ -1,44 +1,106 @@
 {
-    common: {
-      + follow: false
-        setting1: Value 1
-      - setting2: 200
-      - setting3: true
-      + setting3: null
-      + setting4: blah blah
-      + setting5: {
-            key5: value5
+  "common": [
+    "children",
+    {
+      "follow": [
+        "added",
+        false
+      ],
+      "setting1": [
+        "no change",
+        "Value 1"
+      ],
+      "setting2": [
+        "removed",
+        200
+      ],
+      "setting3": [
+        "changed",
+        [
+          true,
+          null
+        ]
+      ],
+      "setting4": [
+        "added",
+        "blah blah"
+      ],
+      "setting5": [
+        "added",
+        {
+          "key5": "value5"
         }
-        setting6: {
-            doge: {
-              - wow: 
-              + wow: so much
+      ],
+      "setting6": [
+        "children",
+        {
+          "doge": [
+            "children",
+            {
+              "wow": [
+                "changed",
+                [
+                  "",
+                  "so much"
+                ]
+              ]
             }
-            key: value
-          + ops: vops
+          ],
+          "key": [
+            "no change",
+            "value"
+          ],
+          "ops": [
+            "added",
+            "vops"
+          ]
         }
+      ]
     }
-    group1: {
-      - baz: bas
-      + baz: bars
-        foo: bar
-      - nest: {
-            key: value
+  ],
+  "group1": [
+    "children",
+    {
+      "baz": [
+        "changed",
+        [
+          "bas",
+          "bars"
+        ]
+      ],
+      "foo": [
+        "no change",
+        "bar"
+      ],
+      "nest": [
+        "changed",
+        [
+          {
+            "key": "value"
+          },
+          "str"
+        ]
+      ]
+    }
+  ],
+  "group2": [
+    "removed",
+    {
+      "abc": 12345,
+      "deep": {
+        "id": 45
+      }
+    }
+  ],
+  "group3": [
+    "added",
+    {
+      "deep": {
+        "id": {
+          "number": 45
         }
-      + nest: str
+      },
+      "fee": 100500
     }
-  - group2: {
-        abc: 12345
-        deep: {
-            id: 45
-        }
-    }
-  + group3: {
-        deep: {
-            id: {
-                number: 45
-            }
-        }
-        fee: 100500
-    }
+  ]
 }

@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-from gendiff.engine.engine import get_diff
-from gendiff.conversion_to_string import get_string
-from gendiff.engine.parser import parses
+from gendiff.engine.engine import generate_diff
+from gendiff.formats.change_under_format import change_under_format
 
 
 YAML_RESULT = 'tests/result/yalm'
-YAML_FILE1 = 'tests/fixtures/file1.yml'
-YAML_FILE2 = 'tests/fixtures/file2.yml'
+YAML_FILE1 = 'tests/fixtures/filepath1.yml'
+YAML_FILE2 = 'tests/fixtures/filepath2.yml'
+STYLISH_RESULT = 'tests/result/stylish'
+JSON_FILE1 = 'tests/fixtures/filepath1.json'
+JSON_FILE2 = 'tests/fixtures/filepath2.json'
+PLAIN_RESULT = 'tests/result/plain'
 JSON_RESULT = 'tests/result/json'
-JSON_FILE1 = 'tests/fixtures/file_test1.json'
-JSON_FILE2 = 'tests/fixtures/file_test2.json'
 
 
 def get_expected_result(path_to_file):
@@ -18,15 +19,25 @@ def get_expected_result(path_to_file):
     return expected_result
 
 
-def test_gendiff_json():
-    file1 = parses(JSON_FILE1)
-    file2 = parses(JSON_FILE2)
-    result = get_diff(file1, file2)
-    assert get_string(result) == get_expected_result(JSON_RESULT)
+def test_stylish():
+    diff = generate_diff(JSON_FILE1, JSON_FILE2)
+    result = change_under_format(diff)
+    assert result == get_expected_result(STYLISH_RESULT)
 
 
-def test_gendiff_yaml():
-    file1 = parses(YAML_FILE1)
-    file2 = parses(YAML_FILE2)
-    result = get_diff(file1, file2)
-    assert get_string(result) == get_expected_result(YAML_RESULT)
+def test_yaml():
+    diff = generate_diff(YAML_FILE1, YAML_FILE2)
+    result = change_under_format(diff)
+    assert result == get_expected_result(YAML_RESULT)
+
+
+def test_palm():
+    diff = generate_diff(JSON_FILE1, JSON_FILE2, format_name='plain')
+    result = change_under_format(diff)
+    assert result == get_expected_result(PLAIN_RESULT)
+
+
+def test_json():
+    diff = generate_diff(JSON_FILE1, JSON_FILE2, format_name='json')
+    result = change_under_format(diff)
+    assert result == get_expected_result(JSON_RESULT)
