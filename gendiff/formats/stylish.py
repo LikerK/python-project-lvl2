@@ -26,7 +26,7 @@ def edit_diff(diff):
             result[REMOVED + key[1]] = convert_value(value[0])
             result[ADDED + key[1]] = convert_value(value[1])
         elif key[0] == 'children':
-            result[SPACE+key[1]] = edit_diff(value)
+            result[SPACE + key[1]] = edit_diff(value)
     return result
 
 
@@ -37,7 +37,7 @@ def convert_value(value):
     keys = value.keys()
     for key in keys:
         v1 = value.get(key)
-        result[SPACE+key] = convert_value(v1)
+        result[SPACE + key] = convert_value(v1)
     return result
 
 
@@ -49,7 +49,7 @@ def string_formation(data, indent=1):
         if type(value) == dict:
             result += f'{SPACE * indent}{key}: ' + '{\n'
             result += string_formation(value, indent+2)
-            result += f'{SPACE * (indent+1)}' + '}\n'
+            result += f'{SPACE * (indent + 1)}' + '}\n'
         else:
             result += f'{SPACE * indent}{key}: {value}\n'
     return result
