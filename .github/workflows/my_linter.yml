@@ -14,7 +14,7 @@ jobs:
       - name: Run linter and test
         run: |
           make check
-      - name: coverage-report
+      - name: Coverage-report
         uses: paambaati/codeclimate-action@v2.7.5
         env:
           CC_TEST_REPORTER_ID: 0c08b7f3b51ef449eb478820e9c95df330bbc0a312b946d822c4be3ebaa3c013
