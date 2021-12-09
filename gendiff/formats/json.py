@@ -16,4 +16,4 @@ def edit_diff(diff):
 
 def json_format(diff):
     result = edit_diff(diff)
-    return json.dumps(result, indent=2)
+    return json.dumps(result, indent = 2)

@@ -48,7 +48,7 @@ def string_formation(data, indent=1):
         value = data[key]
         if type(value) == dict:
             result += f'{SPACE * indent}{key}: ' + '{\n'
-            result += string_formation(value, indent+2)
+            result += string_formation(value, indent + 2)
             result += f'{SPACE * (indent + 1)}' + '}\n'
         else:
             result += f'{SPACE * indent}{key}: {value}\n'
