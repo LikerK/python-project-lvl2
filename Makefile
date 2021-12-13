@@ -26,4 +26,4 @@ coverage:
 	poetry run coverage xml
 
 testing:
-	poetry run coverage run -m pytest -v
+	poetry run -m pytest -v run coverage
