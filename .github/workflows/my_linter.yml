@@ -20,5 +20,5 @@ jobs:
           CC_TEST_REPORTER_ID: 0c08b7f3b51ef449eb478820e9c95df330bbc0a312b946d822c4be3ebaa3c013
         with:
           coverageCommand: |
-            make testing
+            make test
             make coverage
