@@ -1,6 +1,6 @@
 {
   "common": [
-    "children",
+    "nested",
     {
       "follow": [
         "added",
@@ -32,10 +32,10 @@
         }
       ],
       "setting6": [
-        "children",
+        "nested",
         {
           "doge": [
-            "children",
+            "nested",
             {
               "wow": [
                 "changed",
@@ -59,7 +59,7 @@
     }
   ],
   "group1": [
-    "children",
+    "nested",
     {
       "baz": [
         "changed",

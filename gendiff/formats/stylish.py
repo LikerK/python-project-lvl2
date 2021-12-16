@@ -8,7 +8,7 @@ REMOVED = '- '
 
 
 def stylish_format(data):
-    return change_under_format(get_string(data))
+    return get_string(data)
 
 
 def edit_diff(diff):
@@ -25,14 +25,14 @@ def edit_diff(diff):
         elif key[0] == 'changed':
             result[REMOVED + key[1]] = convert_value(value[0])
             result[ADDED + key[1]] = convert_value(value[1])
-        elif key[0] == 'children':
+        elif key[0] == 'nested':
             result[SPACE + key[1]] = edit_diff(value)
     return result
 
 
 def convert_value(value):
     if type(value) != dict:
-        return value
+        return change_under_format(str(value))
     result = {}
     keys = value.keys()
     for key in keys:

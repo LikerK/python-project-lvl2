@@ -3,7 +3,7 @@ from gendiff.formats.change_under_format import change_under_format
 
 
 def plain_format(data):
-    return change_under_format(get_string(data))
+    return get_string(data)
 
 
 def get_string(diff, path=[]):
@@ -24,7 +24,7 @@ def get_string(diff, path=[]):
             result.append(
                 f"Property '{'.'.join(path)}' was updated. "
                 + f"From {value[0]} to {value[1]}")
-        elif key[0] == 'children':
+        elif key[0] == 'nested':
             result.append(plain_format(value))
         path.pop()
     return '\n'.join(result)
@@ -35,4 +35,4 @@ def convert_value(value):
         return '[complex value]'
     elif type(value) == str:
         return f"'{value}'"
-    return value
+    return change_under_format(str(value))

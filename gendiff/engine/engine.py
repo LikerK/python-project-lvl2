@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-from gendiff.engine.parser import parses
+from gendiff.engine.data_extractor import get_data
 from gendiff.formats.styles import FORMATS
 
 
 def generate_diff(file1, file2, format_name='stylish'):
-    file1 = parses(file1)
-    file2 = parses(file2)
+    file1 = get_data(file1)
+    file2 = get_data(file2)
     return FORMATS[format_name](get_diff(file1, file2))
 
 
@@ -24,7 +24,7 @@ def get_diff(data1, data2):
             status = "no change"
             value = v1
         elif type(v1) == dict and type(v2) == dict:
-            status = 'children'
+            status = 'nested'
             value = get_diff(v1, v2)
         else:
             status = "changed"

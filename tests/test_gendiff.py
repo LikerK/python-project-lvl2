@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
+import pytest
 from gendiff.engine.engine import generate_diff
-from gendiff.formats.change_under_format import change_under_format
 
 
-YAML_RESULT = 'tests/result/yalm'
+YAML_RESULT = 'tests/fixtures/result/yalm'
 YAML_FILE1 = 'tests/fixtures/filepath1.yml'
 YAML_FILE2 = 'tests/fixtures/filepath2.yml'
-STYLISH_RESULT = 'tests/result/stylish'
+STYLISH_RESULT = 'tests/fixtures/result/stylish'
 JSON_FILE1 = 'tests/fixtures/filepath1.json'
 JSON_FILE2 = 'tests/fixtures/filepath2.json'
-PLAIN_RESULT = 'tests/result/plain'
-JSON_RESULT = 'tests/result/json'
+PLAIN_RESULT = 'tests/fixtures/result/plain'
+JSON_RESULT = 'tests/fixtures/result/json'
 
 
 def get_expected_result(path_to_file):
@@ -19,25 +19,13 @@ def get_expected_result(path_to_file):
     return expected_result
 
 
-def test_stylish():
-    diff = generate_diff(JSON_FILE1, JSON_FILE2)
-    result = change_under_format(diff)
-    assert result == get_expected_result(STYLISH_RESULT)
-
-
-def test_yaml():
-    diff = generate_diff(YAML_FILE1, YAML_FILE2)
-    result = change_under_format(diff)
-    assert result == get_expected_result(YAML_RESULT)
-
-
-def test_palm():
-    diff = generate_diff(JSON_FILE1, JSON_FILE2, format_name='plain')
-    result = change_under_format(diff)
-    assert result == get_expected_result(PLAIN_RESULT)
-
-
-def test_json():
-    diff = generate_diff(JSON_FILE1, JSON_FILE2, format_name='json')
-    result = change_under_format(diff)
-    assert result == get_expected_result(JSON_RESULT)
+@pytest.mark.parametrize('path1, path2, format, result', [
+    (JSON_FILE1, JSON_FILE2, 'stylish', STYLISH_RESULT),
+    (YAML_FILE1, YAML_FILE2, 'stylish', YAML_RESULT),
+    (JSON_FILE1, JSON_FILE2, 'plain', PLAIN_RESULT),
+    (JSON_FILE1, JSON_FILE2, 'json', JSON_RESULT)
+])
+def test_gendiff(path1, path2, format, result):
+    assert generate_diff(
+        path1, path2, format
+        ) == get_expected_result(result)

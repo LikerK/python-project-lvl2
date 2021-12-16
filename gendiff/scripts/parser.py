@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-import json
-import yaml
 import argparse
 from gendiff.formats.styles import FORMATS
 
@@ -19,10 +17,3 @@ def parse():
                         help='output format (default: "stylish")')
     args = parser.parse_args()
     return args
-
-
-def parses(file):
-    if file.endswith('json'):
-        return json.load(open(file))
-    elif file.endswith('yml'):
-        return yaml.safe_load(open(file))

@@ -7,7 +7,7 @@ def edit_diff(diff):
     keys = diff.keys()
     for key in keys:
         value = diff.get(key)
-        if key[0] == 'children':
+        if key[0] == 'nested':
             result[key[1]] = [key[0], edit_diff(value)]
         else:
             result[key[1]] = [key[0], value]
