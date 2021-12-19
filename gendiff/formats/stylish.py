@@ -7,57 +7,52 @@ ADDED = '+ '
 REMOVED = '- '
 
 
-def stylish_format(data):
-    return get_string(data)
+def stylish_format(diff):
+    result = '{\n' + get_string_diff(diff) + '}'
+    return result
 
 
-def edit_diff(diff):
-    result = {}
+def get_string_diff(diff, indent=0):
+    result = ''
     keys = diff.keys()
     for key in keys:
-        value = diff.get(key)
-        if key[0] == 'removed':
-            result[REMOVED + key[1]] = convert_value(value)
-        elif key[0] == 'added':
-            result[ADDED + key[1]] = convert_value(value)
-        elif key[0] == 'no change':
-            result[SPACE + key[1]] = convert_value(value)
-        elif key[0] == 'changed':
-            result[REMOVED + key[1]] = convert_value(value[0])
-            result[ADDED + key[1]] = convert_value(value[1])
-        elif key[0] == 'nested':
-            result[SPACE + key[1]] = edit_diff(value)
+        data = diff.get(key)
+        status, value = data[0], data[1]
+        if status == 'removed':
+            result += get_top(REMOVED + key, value, indent+1)
+        elif status == 'added':
+            result += get_top(ADDED + key, value, indent+1)
+        elif status == 'no change':
+            result += get_top(SPACE + key, value, indent+1)
+        elif status == 'changed':
+            result += get_top(REMOVED + key, value[0], indent+1)
+            result += get_top(ADDED + key, value[1], indent+1)
+        elif status == 'nested':
+            result += get_top(SPACE + key, data, indent+1)
+            result += get_string_diff(value, indent+2)
+            result += f'{SPACE * (indent + 2)}' + '}\n'
     return result
 
 
-def convert_value(value):
-    if type(value) != dict:
-        return change_under_format(str(value))
-    result = {}
+def get_top(key, value, indent):
+    if type(value) == dict:
+        return (
+            f'{SPACE * indent}{key}:' + ' {\n' + get_value(value, indent+3) +
+            f'{SPACE * (indent+1)}' + '}\n')
+    elif type(value) == list:
+        return f'{SPACE * indent}{key}: ' + '{\n'
+    return change_under_format(f'{SPACE * indent}{key}: {value}\n')
+
+
+def get_value(value, indent):
+    result = ''
     keys = value.keys()
     for key in keys:
-        v1 = value.get(key)
-        result[SPACE + key] = convert_value(v1)
-    return result
-
-
-def string_formation(data, indent=1):
-    result = ''
-    keys = data.keys()
-    for key in keys:
-        value = data[key]
-        if type(value) == dict:
-            result += f'{SPACE * indent}{key}: ' + '{\n'
-            result += string_formation(value, indent + 2)
-            result += f'{SPACE * (indent + 1)}' + '}\n'
+        v = value.get(key)
+        if type(v) == dict:
+            result += f'{SPACE * indent}{key}:' + ' {\n'
+            result += get_value(v, indent+2)
+            result += f'{SPACE * indent}' + '}\n'
         else:
-            result += f'{SPACE * indent}{key}: {value}\n'
-    return result
-
-
-def get_string(diff):
-    result = '{\n'
-    edit_difference = edit_diff(diff)
-    result += string_formation(edit_difference)
-    result += '}'
-    return result
+            result += f'{SPACE * indent}{key}: {v}\n'
+    return change_under_format(result)

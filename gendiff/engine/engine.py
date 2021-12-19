@@ -29,5 +29,5 @@ def get_diff(data1, data2):
         else:
             status = "changed"
             value = v1, v2
-        result[(status, key)] = value
+        result[key] = [status, value]
     return result

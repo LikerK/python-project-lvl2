@@ -11,21 +11,21 @@ def get_string(diff, path=[]):
     keys = diff.keys()
     for key in keys:
         value = diff.get(key)
-        path.append(key[1])
-        if key[0] == 'removed':
-            value = convert_value(value)
+        path.append(key)
+        if value[0] == 'removed':
+            value = convert_value(value[1])
             result.append(f"Property '{'.'.join(path)}' was removed")
-        elif key[0] == 'added':
-            value = convert_value(value)
+        elif value[0] == 'added':
+            value = convert_value(value[1])
             result.append(
                 f"Property '{'.'.join(path)}' was added with value: {value}")
-        elif key[0] == 'changed':
-            value = [convert_value(i) for i in value]
+        elif value[0] == 'changed':
+            value = [convert_value(i) for i in value[1]]
             result.append(
                 f"Property '{'.'.join(path)}' was updated. "
                 + f"From {value[0]} to {value[1]}")
-        elif key[0] == 'nested':
-            result.append(plain_format(value))
+        elif value[0] == 'nested':
+            result.append(get_string(value[1]))
         path.pop()
     return '\n'.join(result)
 
