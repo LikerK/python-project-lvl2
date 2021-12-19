@@ -4,11 +4,10 @@ import json
 
 
 def get_data(file):
-    f = open(file)
     if file.endswith('json'):
-        data = json.load(f)
-        return data
+        with open(file) as f:
+            data = json.load(f)
     elif file.endswith('yml'):
-        data = yaml.safe_load(f)
-    f.close()
+        with open(file) as f:
+            data = yaml.safe_load(f)
     return data

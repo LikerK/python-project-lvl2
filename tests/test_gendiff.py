@@ -31,5 +31,4 @@ def get_expected_result(path_to_file):
 ])
 def test_gendiff(path1, path2, format, result):
     assert generate_diff(
-        path1, path2, format
-        ) == get_expected_result(result)
+        path1, path2, format) == get_expected_result(result)
