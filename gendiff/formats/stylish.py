@@ -37,7 +37,7 @@ def get_string_diff(diff, indent=0):
 def get_top(key, value, indent):
     if type(value) == dict:
         return (
-            f'{SPACE * indent}{key}:' + ' {\n' + get_value(value, indent + 3) 
+            f'{SPACE * indent}{key}:' + ' {\n' + get_value(value, indent + 3)
             + f'{SPACE * (indent+1)}' + '}\n')
     elif type(value) == list:
         return f'{SPACE * indent}{key}: ' + '{\n'
