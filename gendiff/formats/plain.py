@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from gendiff.formats.change_under_format import change_under_format
+import json
 
 
 def plain_format(data):
@@ -10,22 +10,23 @@ def get_string(diff, path=[]):
     result = []
     keys = diff.keys()
     for key in keys:
-        value = diff.get(key)
+        data = diff.get(key)
+        status, value = data[0], data[1]
         path.append(key)
-        if value[0] == 'removed':
-            value = convert_value(value[1])
+        if status == 'removed':
+            value = convert_value(value)
             result.append(f"Property '{'.'.join(path)}' was removed")
-        elif value[0] == 'added':
-            value = convert_value(value[1])
+        elif status == 'added':
+            value = convert_value(value)
             result.append(
                 f"Property '{'.'.join(path)}' was added with value: {value}")
-        elif value[0] == 'changed':
-            value = [convert_value(i) for i in value[1]]
+        elif status == 'changed':
+            value_in_changed = [convert_value(i) for i in value]
             result.append(
                 f"Property '{'.'.join(path)}' was updated. "
-                + f"From {value[0]} to {value[1]}")
-        elif value[0] == 'nested':
-            result.append(get_string(value[1]))
+                + f"From {value_in_changed[0]} to {value_in_changed[1]}")
+        elif status == 'nested':
+            result.append(get_string(value))
         path.pop()
     return '\n'.join(result)
 
@@ -35,4 +36,4 @@ def convert_value(value):
         return '[complex value]'
     elif type(value) == str:
         return f"'{value}'"
-    return change_under_format(str(value))
+    return json.dumps(value) if type(value) != str else value

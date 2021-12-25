@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from gendiff.formats.change_under_format import change_under_format
+import json
 
 
 SPACE = '  '
@@ -12,47 +12,55 @@ def stylish_format(diff):
     return result
 
 
-def get_string_diff(diff, indent=0):
+def get_string_diff(diff, depth=0):
     result = ''
+    indent = SPACE * depth
     keys = diff.keys()
     for key in keys:
         data = diff.get(key)
         status, value = data[0], data[1]
         if status == 'removed':
-            result += get_top(REMOVED + key, value, indent + 1)
+            result += get_top(REMOVED + key, value, depth + 1)
         elif status == 'added':
-            result += get_top(ADDED + key, value, indent + 1)
+            result += get_top(ADDED + key, value, depth + 1)
         elif status == 'no change':
-            result += get_top(SPACE + key, value, indent + 1)
+            result += get_top(SPACE + key, value, depth + 1)
         elif status == 'changed':
-            result += get_top(REMOVED + key, value[0], indent + 1)
-            result += get_top(ADDED + key, value[1], indent + 1)
+            result += get_top(REMOVED + key, value[0], depth + 1)
+            result += get_top(ADDED + key, value[1], depth + 1)
         elif status == 'nested':
-            result += get_top(SPACE + key, data, indent + 1)
-            result += get_string_diff(value, indent + 2)
-            result += f'{SPACE * (indent + 2)}' + '}\n'
+            result += get_top(SPACE + key, data, depth + 1)
+            result += get_string_diff(value, depth + 2)
+            indent = SPACE * (depth + 2)
+            result += f'{indent}' + '}\n'
     return result
 
 
-def get_top(key, value, indent):
+def get_top(key, value, depth):
+    indent = SPACE * depth
     if type(value) == dict:
-        return (
-            f'{SPACE * indent}{key}:' + ' {\n' + get_value(value, indent + 3)
-            + f'{SPACE * (indent+1)}' + '}\n')
+        result = f'{indent}{key}:' + ' {\n' + get_value(value, depth + 3)
+        indent = SPACE * (depth + 1)
+        result += f'{indent}' + '}\n'
+        return result
     elif type(value) == list:
-        return f'{SPACE * indent}{key}: ' + '{\n'
-    return change_under_format(f'{SPACE * indent}{key}: {value}\n')
+        return f'{indent}{key}: ' + '{\n'
+    return (
+        f'{indent}{key}: '
+        + f'{json.dumps(value) if type(value) != str else value}\n')
 
 
-def get_value(value, indent):
+def get_value(value, depth):
+    indent = SPACE * depth
     result = ''
     keys = value.keys()
     for key in keys:
         v = value.get(key)
         if type(v) == dict:
-            result += f'{SPACE * indent}{key}:' + ' {\n'
-            result += get_value(v, indent + 2)
-            result += f'{SPACE * indent}' + '}\n'
+            result += f'{indent}{key}:' + ' {\n'
+            result += get_value(v, depth + 2)
+            result += f'{indent}' + '}\n'
         else:
-            result += f'{SPACE * indent}{key}: {v}\n'
-    return change_under_format(result)
+            result += (
+                f'{indent}{key}: {json.dumps(v) if type(v) != str else v}\n')
+    return result

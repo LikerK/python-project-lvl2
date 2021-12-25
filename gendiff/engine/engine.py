@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-from gendiff.engine.data_extractor import get_data
+from gendiff.engine.data_extractor import get_data, get_content
 from gendiff.formats.styles import FORMATS
 
 
 def generate_diff(file1, file2, format_name='stylish'):
-    file1 = get_data(file1)
-    file2 = get_data(file2)
+    file1 = get_data(get_content(file1), file1)
+    file2 = get_data(get_content(file2), file2)
     return FORMATS[format_name](get_diff(file1, file2))
 
 
