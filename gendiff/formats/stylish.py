@@ -31,7 +31,7 @@ def get_string_diff(diff, depth=0):
             result += get_top(ADDED + key, value[1], depth)
         elif status == 'nested':
             result += f'{indent}{SPACE + key}: ' + '{\n'
-            result += get_string_diff(value, depth+1)
+            result += get_string_diff(value, depth + 1)
             result += f'{indent}' + '  }\n'
     return result
 
@@ -44,7 +44,7 @@ def get_top(key, value, depth, space=''):
         keys = value.keys()
         for key1 in keys:
             v = value.get(key1)
-            result += get_top(key1, v, depth+1, SPACE)
+            result += get_top(key1, v, depth + 1, SPACE)
         result += f'{indent}' + '  }\n'
     else:
         result += f'{json.dumps(value) if type(value) != str else value}\n'
