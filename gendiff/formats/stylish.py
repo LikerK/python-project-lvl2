@@ -15,8 +15,7 @@ STATUSES = {
     'removed': '  - ',
     'changed': '    ',
     'indent': '    ',
-    'nested': '    '
-    }
+    'nested': '    '}
 
 
 def get_string_diff(diff, depth=0):
