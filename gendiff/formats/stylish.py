@@ -2,54 +2,59 @@
 import json
 
 
-LVL = '    '
-SPACE = '  '
-ADDED = '+ '
-REMOVED = '- '
-
-
 def stylish_format(diff):
     result = '{\n' + get_string_diff(diff) + '}'
     return result
 
 
+LVL = '    '
+
+STATUSES = {
+    'no change': '    ',
+    'added': '  + ',
+    'removed': '  - ',
+    'changed': '    ',
+    'indent': '    ',
+    'nested': '    '
+    }
+
+
 def get_string_diff(diff, depth=0):
-    indent = get_indent(depth)
     result = ''
     keys = diff.keys()
     for key in keys:
         data = diff.get(key)
         status, value = data[0], data[1]
-        if status == 'removed':
-            result += get_top(REMOVED + key, value, depth)
-        elif status == 'added':
-            result += get_top(ADDED + key, value, depth)
-        elif status == 'no change':
-            result += get_top(SPACE + key, value, depth)
-        elif status == 'changed':
-            result += get_top(REMOVED + key, value[0], depth)
-            result += get_top(ADDED + key, value[1], depth)
-        elif status == 'nested':
-            result += f'{indent}{SPACE + key}: ' + '{\n'
-            result += get_string_diff(value, depth + 1)
-            result += f'{indent}' + '  }\n'
+        if status == 'changed':
+            result += get_top('removed', key, value[0], depth)
+            result += get_top('added', key, value[1], depth)
+        else:
+            result += get_top(status, key, value, depth)
     return result
 
 
-def get_top(key, value, depth, space=''):
+def get_top(status, key, value, depth):
     indent = get_indent(depth)
-    result = f'{indent}{space}{key}: '
+    result = f'{indent}{STATUSES[status]}{key}: '
     if type(value) == dict:
         result += '{\n'
+    return result + get_value(value, depth + 1, status)
+
+
+def get_value(value, depth, status):
+    indent = get_indent(depth)
+    if status == 'nested':
+        return get_string_diff(value, depth) + indent + '}\n'
+    if type(value) == dict:
+        result = ''
         keys = value.keys()
-        for key1 in keys:
-            v = value.get(key1)
-            result += get_top(key1, v, depth + 1, SPACE)
-        result += f'{indent}' + '  }\n'
-    else:
-        result += f'{json.dumps(value) if type(value) != str else value}\n'
-    return result
+        for key in keys:
+            v = value.get(key)
+            result += get_top('indent', key, v, depth)
+        result += indent + '}\n'
+        return result
+    return f'{json.dumps(value) if type(value) != str else value}\n'
 
 
 def get_indent(depth):
-    return LVL * depth + SPACE
+    return LVL * depth
