@@ -2,57 +2,66 @@
 import json
 
 
-def stylish_format(diff):
-    result = '{\n' + get_string_diff(diff) + '}'
-    return result
-
-
 LVL = '    '
-
-STATUSES = {
+TYPES = {
     'no change': '    ',
     'added': '  + ',
     'removed': '  - ',
     'changed': '    ',
-    'indent': '    ',
+    'empty indent': '    ',
     'nested': '    '}
 
 
-def get_string_diff(diff, depth=0):
-    result = ''
+def stylish_format(diff, depth=0):
+    result = '{\n'
     keys = diff.keys()
     for key in keys:
-        data = diff.get(key)
-        status, value = data[0], data[1]
-        if status == 'changed':
-            result += get_top('removed', key, value[0], depth)
-            result += get_top('added', key, value[1], depth)
-        else:
-            result += get_top(status, key, value, depth)
+        node = diff[key]
+        result += stringify_node(key, node, depth)
+    result += '}'
     return result
 
 
-def get_top(status, key, value, depth):
+def stringify_node(key, node, depth):
     indent = get_indent(depth)
-    result = f'{indent}{STATUSES[status]}{key}: '
-    if type(value) == dict:
-        result += '{\n'
-    return result + get_value(value, depth + 1, status)
+    type, value = node['type'], node['value']
+    result = ''
+    if type == 'changed':
+        first_value = value[0]
+        second_value = value[1]
+        result += (
+            f'{indent}{TYPES["removed"]}{key}: '
+            + get_value(first_value, depth))
+        result += (
+            f'{indent}{TYPES["added"]}{key}: '
+            + get_value(second_value, depth))
+    elif type == 'nested':
+        result += f'{indent}{TYPES[type]}{key}: ' + '{\n'
+        for key, node in value.items():
+            result += stringify_node(key, node, depth + 1)
+        result += indent + TYPES['empty indent'] + '}\n'
+    else:
+        result = f'{indent}{TYPES[type]}{key}: ' + get_value(value, depth)
+    return result
 
 
-def get_value(value, depth, status):
-    indent = get_indent(depth)
-    if status == 'nested':
-        return get_string_diff(value, depth) + indent + '}\n'
-    if type(value) == dict:
-        result = ''
-        keys = value.keys()
-        for key in keys:
-            v = value.get(key)
-            result += get_top('indent', key, v, depth)
-        result += indent + '}\n'
-        return result
+def get_value(value, depth):
+    if type(value) is dict:
+        return convert_dict_to_str(value, depth + 1)
     return f'{json.dumps(value) if type(value) != str else value}\n'
+
+
+def convert_dict_to_str(dict, depth):
+    indent = get_indent(depth)
+    result = '{\n'
+    keys = dict.keys()
+    for key in keys:
+        value = dict.get(key)
+        result += (
+            f'{indent}{TYPES["empty indent"]}{key}: '
+            + get_value(value, depth))
+    result += indent + '}\n'
+    return result
 
 
 def get_indent(depth):

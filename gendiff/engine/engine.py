@@ -15,19 +15,21 @@ def get_diff(data1, data2):
     for key in keys:
         v1, v2 = data1.get(key), data2.get(key)
         if key in data1 and key not in data2:
-            status = "removed"
+            _type = "removed"
             value = v1
         elif key in data2 and key not in data1:
-            status = "added"
+            _type = "added"
             value = v2
         elif v1 == v2:
-            status = "no change"
+            _type = "no change"
             value = v1
-        elif type(v1) == dict and type(v2) == dict:
-            status = 'nested'
+        elif type(v1) is dict and type(v2) is dict:
+            _type = 'nested'
             value = get_diff(v1, v2)
         else:
-            status = "changed"
+            _type = "changed"
             value = v1, v2
-        result[key] = [status, value]
+        result[key] = {
+            'type': _type,
+            'value': value}
     return result
