@@ -1,11 +1,14 @@
-#!/usr/bin/env python3
-from gendiff.engine.data_extractor import get_data, get_content
+from pathlib import Path
+from gendiff.engine.data_extractor import get_data
+from gendiff.engine.file_parser import get_content
 from gendiff.formats.styles import FORMATS
 
 
-def generate_diff(file1, file2, format_name='stylish'):
-    file1 = get_data(get_content(file1), file1)
-    file2 = get_data(get_content(file2), file2)
+def generate_diff(file_path1, file_path2, format_name='stylish'):
+    file_extension1 = Path(file_path1).suffix
+    file_extension2 = Path(file_path2).suffix
+    file1 = get_data(get_content(file_path1), file_extension1)
+    file2 = get_data(get_content(file_path2), file_extension2)
     return FORMATS[format_name](get_diff(file1, file2))
 
 
@@ -21,7 +24,7 @@ def get_diff(data1, data2):
             _type = "added"
             value = v2
         elif v1 == v2:
-            _type = "no change"
+            _type = "unchanged"
             value = v1
         elif type(v1) is dict and type(v2) is dict:
             _type = 'nested'

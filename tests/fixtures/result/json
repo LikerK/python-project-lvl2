@@ -7,7 +7,7 @@
         "value": false
       },
       "setting1": {
-        "type": "no change",
+        "type": "unchanged",
         "value": "Value 1"
       },
       "setting2": {
@@ -47,7 +47,7 @@
             }
           },
           "key": {
-            "type": "no change",
+            "type": "unchanged",
             "value": "value"
           },
           "ops": {
@@ -69,7 +69,7 @@
         ]
       },
       "foo": {
-        "type": "no change",
+        "type": "unchanged",
         "value": "bar"
       },
       "nest": {

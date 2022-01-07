@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 from gendiff.formats import json, plain, stylish
 
 

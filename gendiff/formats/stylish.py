@@ -1,18 +1,19 @@
-#!/usr/bin/env python3
 import json
 
 
 LVL = '    '
-TYPES = {
+EMPTY_INDENT = '    '
+MAPPING_VERTEX_TYPES_TO_INDENTS = {
     'no change': '    ',
     'added': '  + ',
     'removed': '  - ',
-    'changed': '    ',
+    'unchanged': '    ',
     'empty indent': '    ',
     'nested': '    '}
 
 
-def stylish_format(diff, depth=0):
+def stylish_format(diff):
+    depth = 0
     result = '{\n'
     keys = diff.keys()
     for key in keys:
@@ -30,18 +31,21 @@ def stringify_node(key, node, depth):
         first_value = value[0]
         second_value = value[1]
         result += (
-            f'{indent}{TYPES["removed"]}{key}: '
+            f'{indent}{MAPPING_VERTEX_TYPES_TO_INDENTS["removed"]}{key}: '
             + get_value(first_value, depth))
         result += (
-            f'{indent}{TYPES["added"]}{key}: '
+            f'{indent}{MAPPING_VERTEX_TYPES_TO_INDENTS["added"]}{key}: '
             + get_value(second_value, depth))
     elif type == 'nested':
-        result += f'{indent}{TYPES[type]}{key}: ' + '{\n'
+        result += (
+            f'{indent}{MAPPING_VERTEX_TYPES_TO_INDENTS[type]}{key}: ' + '{\n')
         for key, node in value.items():
             result += stringify_node(key, node, depth + 1)
-        result += indent + TYPES['empty indent'] + '}\n'
+        result += indent + EMPTY_INDENT + '}\n'
     else:
-        result = f'{indent}{TYPES[type]}{key}: ' + get_value(value, depth)
+        result = (
+            f'{indent}{MAPPING_VERTEX_TYPES_TO_INDENTS[type]}{key}: '
+            + get_value(value, depth))
     return result
 
 
@@ -58,7 +62,7 @@ def convert_dict_to_str(dict, depth):
     for key in keys:
         value = dict.get(key)
         result += (
-            f'{indent}{TYPES["empty indent"]}{key}: '
+            f'{indent}{EMPTY_INDENT}{key}: '
             + get_value(value, depth))
     result += indent + '}\n'
     return result

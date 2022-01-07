@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from gendiff.scripts.parser import parse
+from gendiff.parser import parse
 from gendiff.engine.engine import generate_diff
 
 
