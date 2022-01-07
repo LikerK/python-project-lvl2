@@ -8,7 +8,6 @@ MAPPING_VERTEX_TYPES_TO_INDENTS = {
     'added': '  + ',
     'removed': '  - ',
     'unchanged': '    ',
-    'empty indent': '    ',
     'nested': '    '}
 
 
